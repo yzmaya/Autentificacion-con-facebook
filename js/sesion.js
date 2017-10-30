@@ -15,6 +15,10 @@
   var imgn = document.getElementById("imagencita");
   const btnLogout = document.getElementById('btnLogout');
 
+   const btnGuardar = document.getElementById('guardar');
+ var input = $('#texto');
+ var caja = $('#caja');
+
   //al presionar el boton con id btnLogout ....
   btnLogout.addEventListener('click', e => {
   //cierro la sesión con la funcion y regreso a mi pagina inicial index.html  
@@ -26,6 +30,29 @@
     });
 
   });
+
+
+ btnGuardar.addEventListener('click', e => {
+     var data = {
+        notas:input.val(),
+     }
+     firebase.firestore().collection('notas').add(data).then(function(snap){
+        console.log(snap);
+     })
+  });
+
+ 
+   var traerDatos = function(){
+    firebase.firestore().collection('notas').onSnapshot(function(snap){
+      console.log(snap);
+      snap.docChanges.forEach(function(change){
+          caja.append('<p>'+ change.doc.data().notas + '</p>')
+      })
+    })
+  }
+
+traerDatos();
+
 
   // Añadir un listener en tiempo real
    firebase.auth().onAuthStateChanged( firebaseUser => {
